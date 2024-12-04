@@ -27,8 +27,29 @@ app.get('/', (req, res) => {
     res.send('Hello world!');
 });
 
+
+//? Maestros endpoints
+app.get('/api/maestros', (req, res) => {
+    connection.query('SELECT * FROM maestros;', (err, results) => {
+        if (err) {
+            console.error("Couldn't execute query: ", err);
+            res.status(500).json({ error: 'Database query failed' });
+        } else {
+            res.json(results);
+        }
+    });
+});
+
+app.post('/api/maestros', (req, res) => {
+    console.log(req.body.name);
+    res.end();
+});
+
+
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);
 });
+
+
 
 
