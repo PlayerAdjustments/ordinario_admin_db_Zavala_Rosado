@@ -27,6 +27,19 @@ app.get('/', (req, res) => {
     res.send('Hello world!');
 });
 
+//obtains data from any table
+function getAllData(tabla, res) {
+    const query = `SELECT * FROM ${tabla};`;
+
+    connection.query(query, (err, results) => {
+        if (err) {
+            console.error("Couldn't execute query: ", err);
+            return res.status(500).json({ error: 'Database query failed' });
+        }
+        
+        res.json(results);
+    });
+}
 
 //? Maestros endpoints
 app.get('/api/maestros', (req, res) => {
@@ -45,6 +58,20 @@ app.post('/api/maestros', (req, res) => {
     res.end();
 });
 
+//? Materias endpoints
+app.get('/api/asignaturas', (req, res) => {
+    getAllData('materias', res)
+})
+
+//? Estudiantes endpoints
+app.get('/api/estudiantes', (req, res) => {
+    getAllData('estudiantes', res)
+})
+
+//? Calificaciones endpoints
+app.get('/api/calificaciones', (req, res) => {
+    getAllData('calificaciones', res)
+})
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);
