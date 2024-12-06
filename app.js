@@ -51,6 +51,23 @@ function sendData(query, values, res){
     })
 }
 
+//obtain id from ceirtan data
+function getIdFromField(tabla, campo, valor) {
+    return new Promise((resolve, reject) => {
+        const query = `SELECT id FROM ${tabla} WHERE ${campo} = ? LIMIT 1;`
+
+        connection.query(query, [valor], (err, results) => {
+            if (err) {
+                reject("Couldn't execute query: " + err)
+            } else if (results.length === 0) {
+                reject(`No record found for ${campo} = ${valor}`)
+            } else {
+                resolve(results[0].id)
+            }
+        })
+    })
+}
+
 //? Maestros endpoints
 app.get('/api/maestros', (req, res) => {
     connection.query('SELECT * FROM maestros;', (err, results) => {
@@ -111,6 +128,32 @@ app.post('/api/estudiantes', (req, res) =>{
 //? Calificaciones endpoints
 app.get('/api/calificaciones', (req, res) => {
     getAllData('calificaciones', res)
+})
+
+app.post('/api/calificaciones', (req, res) =>{
+    const { estudiante_matricula, maestro_correo, materia_nombre, create_user, create_date } = req.body;
+
+    if ( !estudiante_matricula || !maestro_correo || !materia_nombre || !create_user || !create_date) return res.status(400).json({ error: 'Todos los campos son necesarios' })
+
+    if (!create_date || isNaN(new Date(create_date).getTime())) {
+        return res.status(400).json({ error: 'El formato de fecha debe ser válido' })
+    }
+
+    Promise.all([
+        getIdFromField('estudiantes', 'matricula', estudiante_matricula),
+        getIdFromField('maestros', 'correo', maestro_correo),
+        getIdFromField('materias', 'nombre', materia_nombre)
+    ])
+    .then(([estudiante_id, maestro_id, materia_id]) => {
+        //If all id's where found
+        const query = 'INSERT INTO calificaciones (estudiante_id, maestro_id, materia_id, create_user, create_date) VALUES (?, ?, ?, ?, ?)'
+        
+        sendData(query, [estudiante_id, maestro_id, materia_id, create_user, create_date], res)
+    })
+    .catch((error) => {
+        // If some id isn't found
+        res.status(400).json({ error: error })
+    })
 })
 
 app.listen(port, () => {
