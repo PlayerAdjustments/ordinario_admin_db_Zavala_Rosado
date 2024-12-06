@@ -92,6 +92,22 @@ app.get('/api/estudiantes', (req, res) => {
     getAllData('estudiantes', res)
 })
 
+app.post('/api/estudiantes', (req, res) =>{
+    const { nombre, apellidos, email, matricula, edad, semestre, usuario_creacion, fecha_creacion } = req.body;
+
+    if (!nombre || !apellidos || !email || !matricula || !edad || !semestre || !usuario_creacion || !fecha_creacion) return res.status(400).json({ error: 'Todos los campos son necesarios' })
+
+    if (isNaN(edad)) return res.status(400).json({ error: 'La edad debe ser un número' })
+
+    if (!fecha_creacion || isNaN(new Date(fecha_creacion).getTime())) {
+        return res.status(400).json({ error: 'El formato de fecha debe ser válido' })
+    }
+
+    const query = 'INSERT INTO estudiantes (nombre, apellidos, email, matricula, edad, semestre, usuario_creacion, fecha_creacion) VALUES (?, ?, ?, ?, ?, ?, ?, ?)'
+
+    sendData(query, [nombre, apellidos, email, matricula, edad, semestre, usuario_creacion, fecha_creacion], res)
+})
+
 //? Calificaciones endpoints
 app.get('/api/calificaciones', (req, res) => {
     getAllData('calificaciones', res)
