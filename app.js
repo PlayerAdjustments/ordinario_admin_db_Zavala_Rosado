@@ -41,6 +41,16 @@ function getAllData(tabla, res) {
     });
 }
 
+//send data to database
+function sendData(query, values, res){
+    connection.query(query, values, (err, results) => {
+        if(err){
+            return res.status(500).json({error: err.message})
+        }
+        res.status(201).json({message: 'Elemento creado.', id: results.insertId})
+    })
+}
+
 //? Maestros endpoints
 app.get('/api/maestros', (req, res) => {
     connection.query('SELECT * FROM maestros;', (err, results) => {
@@ -61,6 +71,20 @@ app.post('/api/maestros', (req, res) => {
 //? Materias endpoints
 app.get('/api/asignaturas', (req, res) => {
     getAllData('materias', res)
+})
+
+app.post('/api/asignaturas', (req, res) =>{
+    const { nombre, profesor_id, create_user, create_date } = req.body;
+
+    if (!nombre || !profesor_id || !create_date || !create_user) return res.status(400).json({ error: 'Todos los campos son necesarios' })
+    
+    if (!create_date || isNaN(new Date(create_date).getTime())) {
+        return res.status(400).json({ error: 'El formato de fecha debe ser válido' })
+    }
+
+    const query = 'INSERT INTO materias (nombre, profesor_id, create_user, create_date) VALUES (?, ?, ?, ?)'
+
+    sendData(query, [nombre, profesor_id, create_user, create_date], res)
 })
 
 //? Estudiantes endpoints

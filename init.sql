@@ -48,6 +48,8 @@ ALTER TABLE `calificaciones` ADD CONSTRAINT `fk_maestro` FOREIGN KEY (`maestro_i
 
 ALTER TABLE `calificaciones` ADD CONSTRAINT `fk_materia` FOREIGN KEY (`materia_id`) REFERENCES `materias` (`id`);
 
+ALTER TABLE `materias` ADD CONSTRAINT `fk_profesor` FOREIGN KEY (`profesor_id`) REFERENCES `maestros` (`id`);
+
 -- Insert sample data into estudiantes
 INSERT INTO `estudiantes` (`nombre`, `apellidos`, `email`, `matricula`, `edad`, `semestre`, `usuario_creacion`, `fecha_creacion`)
 VALUES
