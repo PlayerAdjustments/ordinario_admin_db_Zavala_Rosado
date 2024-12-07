@@ -5,7 +5,6 @@ const getAsignaturas = (req, res) => {
 }
 
 const createAsignatura = (req, res) => {
-    console.log(req.body);
     const { nombre, profesor_id, create_user } = req.body;
 
     if (!nombre || !profesor_id || !create_user)
