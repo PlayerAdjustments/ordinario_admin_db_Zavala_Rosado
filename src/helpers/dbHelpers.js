@@ -1,6 +1,6 @@
 const connection = require('../config/database');
 
-const allowedTables = ['asignaturas', 'calificaciones', 'estudiantes', 'maestros']
+const allowedTables = ['materias', 'calificaciones', 'estudiantes', 'maestros']
 
 const getDataFromTable = (table, res) => {
 
@@ -50,7 +50,7 @@ const getIDFromField = (table, field, value) => {
 
             if(results.length === 0)
             {
-                return reject(new Error(`No record for ${field} = ${value}`));
+                return reject(new Error(`No record found in ${table} where ${field} = ${value}`));
             }
 
             resolve(results[0].id);
