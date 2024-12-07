@@ -7,7 +7,7 @@ const estudiantesRoutes = require('./estudiantesRoutes');
 const maestrosRoutes = require('./maestrosRoutes');
 
 router.use('/asignaturas', asignaturasRoutes);
-// router.use('/calificaciones', calificacionesRoutes);
+router.use('/calificaciones', calificacionesRoutes);
 router.use('/estudiantes', estudiantesRoutes);
 router.use('/maestros', maestrosRoutes);
 
