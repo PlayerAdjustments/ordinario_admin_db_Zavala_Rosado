@@ -5,8 +5,6 @@ const getEstudiantes = (req, res) => {
 }
 
 const createEstudiante = (req, res) => {
-    console.log('Received Data:', req.body); // Debugging
-
     const { nombre, apellidos, email, matricula, edad, semestre, usuario_creacion} = req.body;
 
     if (!nombre || !apellidos || !email || !matricula || !edad || !semestre || !usuario_creacion)
